@@ -1,6 +1,7 @@
 package ru.misesmirnov.spring.mapper;
 
 import org.mapstruct.*;
+import ru.misesmirnov.spring.dto.RegisterUserDto;
 import ru.misesmirnov.spring.dto.UserDto;
 import ru.misesmirnov.spring.entity.Task;
 import ru.misesmirnov.spring.entity.TaskGroup;
@@ -15,6 +16,7 @@ public interface UserMapper {
     @Mapping(target = "id")
     @Mapping(target = "role")
     @Mapping(target = "username")
+    @Mapping(target = "email")
     @Mapping(target = "taskGroupIds", source = "taskGroups")
     @Mapping(target = "taskIds", source = "tasks")
     UserDto mapToDto(User entity);
@@ -23,12 +25,17 @@ public interface UserMapper {
     @Mapping(target = "role")
     @Mapping(target = "username")
     @Mapping(target = "password")
+    @Mapping(target = "email")
     User mapToEntity(UserDto dto);
 
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "role")
+    @Mapping(target = "username")
+    @Mapping(target = "password")
+    @Mapping(target = "email")
+    UserDto mapToDto(RegisterUserDto registerUserDto);
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-//    @Mapping(target = "id", ignore = true)
-//    @Mapping(target = "role")
-//    @Mapping(target = "username")
     User updateEntity(User source, @MappingTarget User target);
 
     default List<Integer> toTaskIds(List<Task> tasks) {

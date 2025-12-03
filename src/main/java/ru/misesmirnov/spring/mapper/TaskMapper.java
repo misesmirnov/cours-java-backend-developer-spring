@@ -1,8 +1,7 @@
 package ru.misesmirnov.spring.mapper;
 
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
+import ru.misesmirnov.spring.dto.TaskCreateDto;
 import ru.misesmirnov.spring.dto.TaskDto;
 import ru.misesmirnov.spring.entity.Task;
 
@@ -14,6 +13,8 @@ public interface TaskMapper {
     @Mapping(target = "title")
     @Mapping(target = "description")
     @Mapping(target = "status")
+    @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "taskGroupId", source = "taskGroup.id")
     TaskDto mapToDto(Task entity);
 
     @BeanMapping(ignoreByDefault = true)
@@ -21,4 +22,15 @@ public interface TaskMapper {
     @Mapping(target = "description")
     @Mapping(target = "status")
     Task mapToEntity(TaskDto dto);
+
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "title")
+    @Mapping(target = "description")
+    @Mapping(target = "status")
+    @Mapping(target = "userId")
+    @Mapping(target = "taskGroupId")
+    TaskDto mapToDto(TaskCreateDto taskCreateDto);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    Task updateEntity(Task source, @MappingTarget Task target);
 }

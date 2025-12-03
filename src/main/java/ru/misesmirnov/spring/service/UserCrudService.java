@@ -4,8 +4,10 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.misesmirnov.spring.dto.RegisterUserDto;
 import ru.misesmirnov.spring.dto.UserDto;
 import ru.misesmirnov.spring.entity.User;
+import ru.misesmirnov.spring.exception.UserAlreadyExistsException;
 import ru.misesmirnov.spring.mapper.UserMapper;
 import ru.misesmirnov.spring.repository.UserRepository;
 
@@ -19,6 +21,15 @@ public class UserCrudService implements CrudService<UserDto> {
 
     final UserRepository userRepository;
     final UserMapper userMapper;
+
+
+    public UserDto registerUser(RegisterUserDto registerUserDto) {
+        log.info("Запрос на регистрацию Пользователя: {}", registerUserDto.username());
+        if (userRepository.findByUsernameIgnoreCase(registerUserDto.username()).isPresent()) {
+            throw new UserAlreadyExistsException("Пользователь уже существует");
+        }
+        return this.create(userMapper.mapToDto(registerUserDto));
+    }
 
     @Override
     public Optional<UserDto> getById(Integer id) {
@@ -45,8 +56,7 @@ public class UserCrudService implements CrudService<UserDto> {
     @Override
     public UserDto update(Integer id, UserDto item) {
         log.info("Запрос на обновление Пользователя {}", id);
-        User target = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Пользователь с ID " + id + " не найден"));
+        User target = findUserById(id);
         User updated = userMapper.updateEntity(userMapper.mapToEntity(item), target);
         return userMapper.mapToDto(userRepository.save(updated));
     }
@@ -59,5 +69,10 @@ public class UserCrudService implements CrudService<UserDto> {
             return true;
         }
         return false;
+    }
+
+    public User findUserById(Integer id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Пользователь с ID " + id + " не найден"));
     }
 }

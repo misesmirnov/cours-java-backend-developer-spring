@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.With;
-import ru.misesmirnov.spring.entity.type.UserRoleEnum;
 
 import java.io.Serializable;
 import java.util.List;
@@ -13,11 +12,7 @@ import java.util.List;
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record UserDto(Integer id,
-                      String username,
-                      String email,
-                      String password,
-                      UserRoleEnum role,
-                      List<Integer> taskGroupIds,
-                      List<Integer> taskIds) implements Serializable {
+public record TaskGroupCreateDto(String groupName,
+                                 Integer userId,
+                                 List<Integer> taskIds) implements Serializable {
 }

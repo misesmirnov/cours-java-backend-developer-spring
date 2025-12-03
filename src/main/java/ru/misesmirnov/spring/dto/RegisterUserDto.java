@@ -7,17 +7,13 @@ import lombok.With;
 import ru.misesmirnov.spring.entity.type.UserRoleEnum;
 
 import java.io.Serializable;
-import java.util.List;
 
 @With
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record UserDto(Integer id,
-                      String username,
-                      String email,
-                      String password,
-                      UserRoleEnum role,
-                      List<Integer> taskGroupIds,
-                      List<Integer> taskIds) implements Serializable {
+public record RegisterUserDto(String username,
+                              String email,
+                              String password,
+                              UserRoleEnum role) implements Serializable {
 }
