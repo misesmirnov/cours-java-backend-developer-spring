@@ -16,10 +16,10 @@ import ru.misesmirnov.spring.utils.JwtTokenProvider;
 @AllArgsConstructor
 public class AuthService {
 
-    final UserRepository userRepository;
-    final PasswordEncoder passwordEncoder;
-    final JwtTokenProvider jwtTokenProvider;
-    final SecurityContextService securityContextService;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final SecurityContextService securityContextService;
 
     public LoginResponse auth(LoginRequest loginRequest) {
         User user = userRepository.findByEmailIgnoreCase(loginRequest.email())

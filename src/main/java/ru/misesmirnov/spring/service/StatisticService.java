@@ -18,9 +18,9 @@ import java.util.List;
 @Slf4j
 public class StatisticService {
 
-    final UserRepository userRepository;
-    final TaskRepository taskRepository;
-    final TaskGroupRepository taskGroupRepository;
+    private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
+    private final TaskGroupRepository taskGroupRepository;
 
     public StatisticsDto getStatistics() {
         return StatisticsDto.builder()

@@ -22,8 +22,8 @@ import ru.misesmirnov.spring.service.UserCrudService;
 @Tag(name = "Аутентификация", description = "API для регистрации и аутентификации пользователей")
 public class AuthController {
 
-    final AuthService authService;
-    final UserCrudService userCrudService;
+    private final AuthService authService;
+    private final UserCrudService userCrudService;
 
     @Operation(summary = "Регистрация нового пользователя",
             description = "Создает нового пользователя в системе. Пароль автоматически шифруется.")

@@ -18,7 +18,7 @@ import ru.misesmirnov.spring.utils.JwtAuthFilter;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    final JwtAuthFilter jwtAuthFilter;
+    private final JwtAuthFilter jwtAuthFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

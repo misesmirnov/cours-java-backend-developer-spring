@@ -21,9 +21,9 @@ import java.util.Optional;
 @Slf4j
 public class UserCrudService implements CrudService<UserDto> {
 
-    final UserRepository userRepository;
-    final UserMapper userMapper;
-    final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
 
     public UserDto registerUser(RegisterUserDto registerUserDto) {

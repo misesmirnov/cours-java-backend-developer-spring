@@ -23,11 +23,11 @@ import java.util.Optional;
 @Slf4j
 public class TaskGroupCrudService implements CrudService<TaskGroupDto> {
 
-    final TaskGroupRepository taskGroupRepository;
-    final TaskRepository taskRepository;
-    final TaskGroupMapper taskGroupMapper;
-    final UserCrudService userCrudService;
-    final AuthService authService;
+    private final TaskGroupRepository taskGroupRepository;
+    private final TaskRepository taskRepository;
+    private final TaskGroupMapper taskGroupMapper;
+    private final UserCrudService userCrudService;
+    private final AuthService authService;
 
     @Override
     public Optional<TaskGroupDto> getById(Integer id) {
