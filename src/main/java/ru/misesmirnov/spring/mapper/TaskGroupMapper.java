@@ -1,8 +1,8 @@
 package ru.misesmirnov.spring.mapper;
 
 import org.mapstruct.*;
-import ru.misesmirnov.spring.dto.TaskGroupCreateDto;
 import ru.misesmirnov.spring.dto.TaskGroupDto;
+import ru.misesmirnov.spring.dto.TaskGroupRequestDto;
 import ru.misesmirnov.spring.entity.Task;
 import ru.misesmirnov.spring.entity.TaskGroup;
 
@@ -23,10 +23,8 @@ public interface TaskGroupMapper {
     TaskGroup mapToEntity(TaskGroupDto dto);
 
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "userId")
     @Mapping(target = "groupName")
-    @Mapping(target = "taskIds")
-    TaskGroupDto mapToDto(TaskGroupCreateDto taskGroupCreateDto);
+    TaskGroupDto mapToDto(TaskGroupRequestDto taskGroupRequestDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     TaskGroup updateEntity(TaskGroup source, @MappingTarget TaskGroup target);
