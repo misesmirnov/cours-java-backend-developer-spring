@@ -12,9 +12,8 @@ import java.io.Serializable;
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record TaskCreateDto(String title,
-                            String description,
-                            TaskStatusEnum status,
-                            Integer taskGroupId,
-                            Integer userId) implements Serializable {
+public record TaskRequestDto(String title,
+                             String description,
+                             TaskStatusEnum status,
+                             Integer taskGroupId) implements Serializable {
 }

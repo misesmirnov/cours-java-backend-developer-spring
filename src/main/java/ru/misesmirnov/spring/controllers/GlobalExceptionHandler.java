@@ -3,6 +3,7 @@ package ru.misesmirnov.spring.controllers;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.misesmirnov.spring.dto.ErrorDto;
@@ -10,6 +11,8 @@ import ru.misesmirnov.spring.exception.TaskGroupHaveTaskOtherUserException;
 import ru.misesmirnov.spring.exception.TaskGroupNotFoundException;
 import ru.misesmirnov.spring.exception.TaskNotFoundException;
 import ru.misesmirnov.spring.exception.UserAlreadyExistsException;
+
+import java.nio.file.AccessDeniedException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -65,7 +68,19 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR) // 500
                 .body(ErrorDto.builder()
-                        .message("Внутренняя ошибка сервера")
+                        .message("Внутренняя ошибка сервера: " + ex.getMessage())
                         .build());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body("Доступ запрещен: " + e.getMessage());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<String> handleBadCredentialsException(BadCredentialsException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(e.getMessage());
     }
 }

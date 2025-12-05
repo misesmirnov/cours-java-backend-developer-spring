@@ -4,8 +4,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.misesmirnov.spring.dto.TaskCreateDto;
 import ru.misesmirnov.spring.dto.TaskDto;
+import ru.misesmirnov.spring.dto.TaskRequestDto;
 import ru.misesmirnov.spring.entity.Task;
 import ru.misesmirnov.spring.entity.TaskGroup;
 import ru.misesmirnov.spring.entity.User;
@@ -24,9 +24,16 @@ public class TaskCrudService implements CrudService<TaskDto> {
     final TaskGroupCrudService taskGroupCrudService;
     final TaskRepository taskRepository;
     final TaskMapper taskMapper;
+    final AuthService authService;
 
     @Override
     public Optional<TaskDto> getById(Integer id) {
+        log.info("Запрос на получение Задачи по Id: {}", id);
+        return taskRepository.findByIdAndUser_Id(id, authService.getCurrentUserId())
+                .map(taskMapper::mapToDto);
+    }
+
+    public Optional<TaskDto> getByIdForAdmin(Integer id) {
         log.info("Запрос на получение Задачи по Id: {}", id);
         return taskRepository.findById(id)
                 .map(taskMapper::mapToDto);
@@ -40,6 +47,10 @@ public class TaskCrudService implements CrudService<TaskDto> {
                 .toList();
     }
 
+    public Collection<TaskDto> getUserTasks() {
+        return getUserTasks(authService.getCurrentUserId());
+    }
+
     public Collection<TaskDto> getUserTasks(Integer UserId) {
         log.info("Запрос на получение списка Задач по UserId: " + UserId);
         return taskRepository.findByUser_Id(UserId).stream()
@@ -47,8 +58,9 @@ public class TaskCrudService implements CrudService<TaskDto> {
                 .toList();
     }
 
-    public TaskDto createTask(TaskCreateDto taskCreateDto) {
-        return create(taskMapper.mapToDto(taskCreateDto));
+    public TaskDto createTask(TaskRequestDto taskRequestDto) {
+        return create(taskMapper.mapToDto(taskRequestDto)
+                .withUserId(authService.getCurrentUserId()));
     }
 
     @Override
@@ -70,7 +82,7 @@ public class TaskCrudService implements CrudService<TaskDto> {
     @Override
     public TaskDto update(Integer id, TaskDto item) {
         log.info("Запрос на обновление Задачи по ID: {}", id);
-        Task target = findTaskById(id);
+        Task target = findTaskById(id, authService.getCurrentUserId());
         Task updated = taskMapper.updateEntity(taskMapper.mapToEntity(item), target);
 
         if (item.userId() != null) {
@@ -91,15 +103,15 @@ public class TaskCrudService implements CrudService<TaskDto> {
     @Override
     public boolean delete(Integer id) {
         log.info("Запрос на delete Задачи с id: {}", id);
-        if (taskRepository.existsById(id)) {
+        if (taskRepository.existsByIdAndUser_Id(id, authService.getCurrentUserId())) {
             taskRepository.deleteById(id);
             return true;
         }
         return false;
     }
 
-    public Task findTaskById(Integer id) {
-        return taskRepository.findById(id)
+    public Task findTaskById(Integer id, Integer userId) {
+        return taskRepository.findByIdAndUser_Id(id, userId)
                 .orElseThrow(() -> new EntityNotFoundException("Задача с ID " + id + " не найдена"));
     }
 }
